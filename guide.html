@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAIR-EVA Guide</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    .code-block {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .copy-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(65, 96, 151, 0.2);
+    }
+    
+    .step-number {
+      background: linear-gradient(135deg, #416097 0%, #81cdee 100%);
+    }
+
+    .logo-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 32px;
+      color: white;
+      margin: 0 4px;
+    }
+
+    .eva-text {
+      display: inline-block;
+      color: white;
+      font-size: 28px;
+      font-weight: 300;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .section-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      margin: 48px 0;
+    }
+
+    .link-text {
+      word-break: break-all;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="w-full min-h-full">
+  <div class="w-full min-h-full" style="background: linear-gradient(135deg, #416097 0%, #81cdee 100%);">
+   <div class="w-full px-6 py-12">
+    <header class="text-center mb-12">
+     <div class="logo-container">
+      <div class="logo-circle" style="background-color: #d0352b;">
+       F
+      </div>
+      <div class="logo-circle" style="background-color: #9fb81f;">
+       A
+      </div>
+      <div class="logo-circle" style="background-color: #41abca;">
+       I
+      </div>
+      <div class="logo-circle" style="background-color: #fcc618;">
+       R
+      </div><span class="eva-text">eva</span>
+     </div>
+     <p id="subtitle" class="text-xl max-w-4xl mx-auto" style="color: #ffffff;">A validation service that evaluates FAIRness indicators for EUCAIM datasets</p>
+    </header>
+    <main class="max-w-6xl mx-auto"><!-- About Section -->
+     <section class="card rounded-2xl p-8 mb-8" style="background-color: #ffffff;">
+      <h2 id="components-title" class="text-3xl font-bold mb-4" style="color: #1e293b;">Components</h2>
+      <p id="components-intro" class="leading-relaxed mb-4" style="color: #475569;">FAIR EVA is a web service deployable as standalone application or Docker container (preferred).</p>
+      <p id="components-available" class="leading-relaxed mb-2 font-semibold" style="color: #334155;">Available components for EUCAIM:</p>
+      <ul class="mb-4 ml-6 space-y-1">
+       <li id="component-service" style="color: #475569;">• <span class="font-semibold">Web Service:</span> Core FAIR EVA evaluator, adapted for EUCAIM.</li>
+       <li id="component-web" style="color: #475569;">• <span class="font-semibold">Web Client:</span> User-friendly interface for individual dataset queries.</li>
+       <li id="component-cli" style="color: #475569;">• <span class="font-semibold">CLI Client:</span> Supports single dataset and batch evaluation. Batch mode outputs files and checks only new or modified datasets.</li>
+      </ul>
+      <p id="docker-title" class="leading-relaxed mb-2 font-semibold" style="color: #334155;">Docker Images:</p>
+      <p id="docker-intro" class="leading-relaxed mb-2 text-sm" style="color: #475569;">FAIR EVA for EUCAIM components are available as docker images in the Harbor repository:</p>
+      <ul class="ml-6 space-y-1">
+       <li class="font-mono text-xs" style="color: #416097;">• harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_service</li>
+       <li class="font-mono text-xs" style="color: #416097;">• harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_web</li>
+       <li class="font-mono text-xs" style="color: #416097;">• harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli</li>
+      </ul>
+     </section><!-- Note Section -->
+     <section class="card rounded-2xl p-6 mb-8" style="background-color: rgba(255, 255, 255, 0.95);">
+      <p id="note-text" class="text-center leading-relaxed font-medium" style="color: #334155;">Both the web client and the command line client rely on the FAIR-EVA Web Service, which must be running before using any client.</p>
+     </section><!-- Start Service Section -->
+     <section class="card rounded-2xl p-8 mb-8" style="background-color: #ffffff;">
+      <h2 id="service-title" class="text-3xl font-bold mb-4" style="color: #1e293b;">Start the FAIR-EVA Service</h2>
+      <p id="service-text" class="leading-relaxed mb-4" style="color: #475569;">In order to launch the FAIR EVA web service using Docker:</p>
+      <div class="code-block rounded-lg p-4 mb-4" style="background-color: #f1f5f9;"><code id="service-command" class="block font-mono text-sm" style="color: #0f172a;">docker run --name=FAIR_EVA -dit --network host harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_service:latest</code>
+      </div><button class="copy-btn px-4 py-2 rounded-lg font-medium mb-6" style="background-color: #416097; color: #ffffff;" onclick="copyToClipboard('service-command')"> 📋 Copy command </button>
+      <p id="service-info" class="leading-relaxed" style="color: #475569;">This launches the FAIR-EVA evaluation engine and exposes the web service in port 9090 by default. But you can remap ports using -p HOST:CONTAINER if desired.</p>
+     </section>
+     <div class="section-divider"></div>
+     <div class="text-center mb-8">
+      <p id="modes-text" class="text-xl font-medium" style="color: #ffffff;">Once the service is running, you can use either:</p>
+     </div><!-- Two Modes Grid -->
+     <div class="grid md:grid-cols-2 gap-8 mb-8"><!-- Web Mode Card -->
+      <article class="card rounded-2xl p-8" style="background-color: #ffffff;">
+       <div class="flex items-center gap-4 mb-6">
+        <svg class="w-12 h-12" style="fill: #f18918;" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z" />
+        </svg>
+        <h2 id="web-title" class="text-3xl font-bold" style="color: #1e293b;">Web Mode</h2>
+       </div>
+       <div class="space-y-6">
+        <section>
+         <p id="web-docker-text" class="leading-relaxed mb-3" style="color: #475569;">Launch the web client:</p>
+         <div class="code-block rounded-lg p-3 mb-3" style="background-color: #f1f5f9;"><code id="web-docker-command" class="block font-mono text-xs" style="color: #0f172a;">docker run -dit -p 5000:5000 harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_web:latest</code>
+         </div><button class="copy-btn px-3 py-2 rounded-lg font-medium text-sm mb-4" style="background-color: #f18918; color: #ffffff;" onclick="copyToClipboard('web-docker-command')"> 📋 Copy </button>
+        </section>
+        <section>
+         <div class="flex items-center gap-3 mb-3"><span class="step-number w-8 h-8 rounded-full flex items-center justify-center text-white font-bold">1</span>
+          <p id="web-step1" class="font-semibold" style="color: #334155;">Open your browser at:</p>
+         </div>
+         <div>
+          <p id="web-url" class="font-mono text-sm link-text" style="color: #416097;">http://[ip_address]:5000/en</p>
+         </div>
+         <div class="mt-3 rounded-lg border-2 border-dashed" style="border-color: #cbd5e1; background-color: #f8fafc;">
+            <img src="/main_page.png"
+                alt="FAIR-EVA main page screenshot"
+                style="max-width: 100%; height: auto; border-radius: 8px;" />
+         </div>
+        </section>
+        <section>
+         <div class="flex items-center gap-3 mb-3"><span class="step-number w-8 h-8 rounded-full flex items-center justify-center text-white font-bold">2</span>
+          <p id="web-step2" class="font-semibold" style="color: #334155;">Choose a dataset ID from the EUCAIM catalogue:</p>
+         </div>
+         <div><a id="web-catalogue" href="https://catalogue.eucaim.cancerimage.eu/Eucaim/eucaim-ui/#/catalogue" target="_blank" rel="noopener noreferrer" class="font-mono text-sm link-text hover:underline" style="color: #416097;">https://catalogue.eucaim.cancerimage.eu/Eucaim/eucaim-ui/#/catalogue</a>
+         <div class="mt-3 rounded-lg border-2 border-dashed" style="border-color: #cbd5e1; background-color: #f8fafc; align-content: center;">
+            <img src="/dataset_id.png"
+                alt="FAIR-EVA main page screenshot"
+                style="max-width: 100%; height: auto; border-radius: 8px; align-items: center;" />
+         </div>
+        </section>
+        <section>
+         <div class="flex items-center gap-3 mb-3"><span class="step-number w-8 h-8 rounded-full flex items-center justify-center text-white font-bold">3</span>
+          <p id="web-step3" class="font-semibold" style="color: #334155;">Choose the RDF Evaluation mode:</p>
+         </div>
+         <div class="space-y-2">
+          <p id="web-legacy" class="text-sm" style="color: #475569;">• <span class="font-semibold">Legacy Schema</span> — matches the current RDF structure in the EUCAIM catalogue</p>
+          <p id="web-new" class="text-sm" style="color: #475569;">• <span class="font-semibold">New Schema</span> — follows the WP5 vocabulary (not yet used in catalogue)</p>
+         </div>
+        </section>
+        <section>
+        <div class="flex items-center gap-3 mb-3">
+            <span class="step-number w-8 h-8 rounded-full flex items-center justify-center text-white font-bold">4</span>
+            <p id="web-step4" class="font-semibold" style="color: #334155;">
+            Wait for the results and download them using the 'Export pdf' button.
+            </p>
+        </div>
+
+        <div class="mt-3 rounded-lg border-2 border-dashed" style="border-color: #cbd5e1; background-color: #f8fafc;">
+            <img src="/export_pdf.png"
+                alt="FAIR-EVA main page screenshot"
+                style="max-width: 100%; height: auto; border-radius: 8px;" />
+        </div>
+        </section>
+       </div>
+      </article><!-- CLI Mode Card -->
+      <article class="card rounded-2xl p-8" style="background-color: #ffffff;">
+       <div class="flex items-center gap-4 mb-6">
+        <svg class="w-12 h-12" style="fill: #416097;" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 18V6h16v12H4zm6.7-7.3l-1.4 1.4L7.6 10l1.7-1.7 1.4 1.4zm3.9 0l1.4 1.4L17.7 10l-1.7-1.7-1.4 1.4zM10 14h8v1h-8v-1z" />
+        </svg>
+        <h2 id="cli-title" class="text-3xl font-bold" style="color: #1e293b;">CLI Mode</h2>
+       </div>
+       <p id="cli-intro" class="leading-relaxed mb-6" style="color: #475569;">You can evaluate all datasets (batch mode) or one dataset (single evaluation).</p>
+       <section class="mb-6">
+        <h3 id="cli-pull-title" class="text-lg font-semibold mb-3" style="color: #334155;">Pull the CLI image</h3>
+        <div class="code-block rounded-lg p-3 mb-3" style="background-color: #f1f5f9;"><code id="cli-pull-command" class="block font-mono text-xs" style="color: #0f172a;">docker pull harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest</code>
+        </div><button class="copy-btn px-3 py-2 rounded-lg font-medium text-sm" style="background-color: #416097; color: #ffffff;" onclick="copyToClipboard('cli-pull-command')"> 📋 Copy </button>
+       </section>
+       <section class="mb-6">
+        <div class="flex items-center gap-3 mb-3">
+        <span class="step-number w-8 h-8 rounded-full flex items-center justify-center text-white font-bold">1</span>
+        <h3 id="cli-batch-title" class="text-lg font-semibold" style="color: #334155;">
+            Batch Mode — Evaluate ALL datasets
+        </h3>
+        </div>
+        <p class="text-sm mb-3" style="color: #64748b;">Runs batch_runner.py inside the container.</p>
+        <p class="text-sm font-medium mb-2" style="color: #475569;">Windows:</p>
+        <div class="code-block rounded-lg p-3 mb-3" style="background-color: #f1f5f9;"><code id="cli-batch-windows" class="block font-mono text-xs" style="color: #0f172a;">docker run -t --rm --network host -v C:/path_to_project_faireva_out:/FAIR_eva/faireva_out harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest -b --eucaim_old</code>
+        </div><button class="copy-btn px-3 py-2 rounded-lg font-medium text-sm mb-4" style="background-color: #416097; color: #ffffff;" onclick="copyToClipboard('cli-batch-windows')"> 📋 Copy </button>
+        <p class="text-sm font-medium mb-2" style="color: #475569;">Linux:</p>
+        <div class="code-block rounded-lg p-3 mb-3" style="background-color: #f1f5f9;"><code id="cli-batch-linux" class="block font-mono text-xs" style="color: #0f172a;">docker run -t --rm --network host -v OUTDIR:/FAIR_eva/faireva_out harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest -b --eucaim_old</code>
+        </div><button class="copy-btn px-3 py-2 rounded-lg font-medium text-sm mb-3" style="background-color: #416097; color: #ffffff;" onclick="copyToClipboard('cli-batch-linux')"> 📋 Copy </button>
+        <p id="cli-batch-flags-title" class="text-sm font-semibold mb-2" style="color: #334155;">Additional Available Flags:</p>
+        <ul class="ml-6 mb-3 space-y-1">
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--api_root API_ROOT</span> — EUCAIM catalogue RDF root URL</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--out OUT</span> — Output directory inside container (default: faireva_out)</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--eucaim_old</span> — Use old EUCAIM SHACL shapes</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--host HOST</span> — Hostname where FAIR-EVA API is running</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--limit LIMIT</span> — Process only first N datasets</li>
+        </ul>
+        <p id="cli-batch-note" class="text-xs italic mb-2" style="color: #64748b;">(Most users only need -b --eucaim_old.)</p>
+        <p id="cli-batch-result" class="text-sm" style="color: #475569;">Text files will be created for each dataset in the output folder, additionally a CSV file for all the datasets will also be created.</p>
+       </section>
+       <section>
+        <div class="flex items-center gap-3 mb-3">
+        <span class="step-number w-8 h-8 rounded-full flex items-center justify-center text-white font-bold">2</span>
+        <h3 id="cli-single-title" class="text-lg font-semibold" style="color: #334155;">
+            Single Dataset Mode — Evaluate ONE dataset
+        </h3>
+        </div>
+        <p class="text-sm mb-3" style="color: #64748b;">Runs fair-eva.py inside the container.</p>
+        <div class="code-block rounded-lg p-3 mb-3" style="background-color: #f1f5f9;"><code id="cli-single-command" class="block font-mono text-xs" style="color: #0f172a;">docker run --rm --network host harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest -i 822ad0bd-02d1-4932-a8b2-7d5679c3d4f0 -p eucaim_catalogue -j --eucaim_old</code>
+        </div><button class="copy-btn px-3 py-2 rounded-lg font-medium text-sm mb-3" style="background-color: #416097; color: #ffffff;" onclick="copyToClipboard('cli-single-command')"> 📋 Copy </button>
+        <p id="cli-single-flags-title" class="text-sm font-semibold mb-2" style="color: #334155;">Available Flags:</p>
+        <ul class="ml-6 space-y-1">
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">-d</span> — Debug mode</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">-i IDENTIFIER</span> — Dataset ID</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">-p PLUGIN</span> — FAIR-EVA plugin</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">-r URL</span> — Repository endpoint</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--api-endpoint URL</span> — API endpoint for evaluation</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">-j</span> — Print JSON output</li>
+         <li class="text-xs" style="color: #475569;">• <span class="font-mono">--eucaim_old</span> — Use EUCAIM-OLD SHACL shapes</li>
+        </ul>
+       </section>
+      </article>
+     </div>
+     <footer class="text-center mt-12">
+      <div class="inline-block rounded-lg px-6 py-3" style="background-color: rgba(255, 255, 255, 0.2);">
+       <p id="footer-text" class="text-lg font-medium" style="color: #ffffff;">💡 Choose the mode that best matches your workflow</p>
+      </div>
+     </footer>
+    </main>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#416097",
+      card_background: "#ffffff",
+      primary_text_color: "#1e293b",
+      secondary_text_color: "#334155",
+      body_text_color: "#475569",
+      subtitle: "A validation service that evaluates FAIRness indicators for EUCAIM datasets",
+      about_title: "About FAIR-EVA",
+      about_text: "FAIR-EVA is a validation service that evaluates FAIRness indicators for EUCAIM datasets. Both the Web Client and the Command Line Client rely on the FAIR-EVA Web Service, which must be running before using any client.",
+      service_title: "Start the FAIR-EVA Service",
+      service_text: "FAIR-EVA runs through Docker Compose. This starts both the evaluation service and the web interface:",
+      service_command: "docker compose up -d",
+      service_info: "This launches the FAIR-EVA evaluation engine and exposes:",
+      service_api: "API: http://localhost:9090",
+      service_web: "Web Interface: http://localhost:5000",
+      service_note: "(You may remap ports using -p HOST:CONTAINER if needed.)",
+      modes_text: "Once the service is running, you can use either:",
+      web_title: "Web Mode",
+      web_step1: "Open your browser at:",
+      web_url: "http://localhost:5000/en",
+      web_step2: "Choose a dataset ID from the EUCAIM catalogue:",
+      web_catalogue: "https://catalogue.eucaim.cancerimage.eu/Eucaim/eucaim-ui/#/catalogue",
+      web_step3: "Choose the RDF Evaluation mode:",
+      web_legacy: "Legacy Schema — matches the current RDF structure in the EUCAIM catalogue",
+      web_new: "New Schema — follows the WP5 vocabulary (not yet used in catalogue)",
+      web_step4: "Wait for the results and download them using the 'Export pdf' button.",
+      cli_title: "Command Line Mode",
+      cli_intro: "You can evaluate all datasets (batch mode) or one dataset (single evaluation).",
+      cli_pull_title: "Pull the command line image",
+      cli_pull_command: "docker pull harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest",
+      cli_batch_title: "1. Batch Mode — Evaluate ALL datasets",
+      cli_batch_windows: "docker run --network host -v \"C:\\path\\to\\output\" harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest -b --eucaim_old",
+      cli_batch_linux: "docker run --network host -v OUTDIR:/FAIR_eva/faireva_out harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest -b --eucaim_old",
+      cli_batch_flags: "Additional flags: --api_root, --out, --host, --limit",
+      cli_batch_result: "Text files will be created for each dataset in the output folder, plus a CSV file for all datasets.",
+      cli_single_title: "2. Single Dataset Mode — Evaluate ONE dataset",
+      cli_single_command: "docker run --network host harbor.eucaim.cancerimage.eu/processing-tools/fair_eva_cli:latest -i 822ad0bd-02d1-4932-a8b2-7d5679c3d4f0 -p eucaim_catalogue -j --eucaim_old",
+      cli_single_flags: "Additional flags: -d (debug), -i (dataset ID), -p (plugin), -r (repository), --api-endpoint, -j (JSON output)",
+      footer_text: "💡 Choose the mode that best matches your workflow",
+      font_family: "system-ui, -apple-system, sans-serif",
+      font_size: 16
+    };
+
+    async function onConfigChange(config) {
+      const baseFontStack = 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+
+      // Update all text elements
+      document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+      document.getElementById('about-title').textContent = config.about_title || defaultConfig.about_title;
+      document.getElementById('about-text').textContent = config.about_text || defaultConfig.about_text;
+      document.getElementById('service-title').textContent = config.service_title || defaultConfig.service_title;
+      document.getElementById('service-text').textContent = config.service_text || defaultConfig.service_text;
+      document.getElementById('service-command').textContent = config.service_command || defaultConfig.service_command;
+      document.getElementById('service-info').textContent = config.service_info || defaultConfig.service_info;
+      document.getElementById('service-api').innerHTML = `• <span class="font-mono" style="color: #416097;">${config.service_api || defaultConfig.service_api}</span>`;
+      document.getElementById('service-web').innerHTML = `• <span class="font-mono" style="color: #416097;">${config.service_web || defaultConfig.service_web}</span>`;
+      document.getElementById('service-note').textContent = config.service_note || defaultConfig.service_note;
+      document.getElementById('modes-text').textContent = config.modes_text || defaultConfig.modes_text;
+      document.getElementById('web-title').textContent = config.web_title || defaultConfig.web_title;
+      document.getElementById('web-step1').textContent = config.web_step1 || defaultConfig.web_step1;
+      document.getElementById('web-url').textContent = config.web_url || defaultConfig.web_url;
+      document.getElementById('web-url').href = config.web_url || defaultConfig.web_url;
+      document.getElementById('web-step2').textContent = config.web_step2 || defaultConfig.web_step2;
+      document.getElementById('web-catalogue').textContent = config.web_catalogue || defaultConfig.web_catalogue;
+      document.getElementById('web-catalogue').href = config.web_catalogue || defaultConfig.web_catalogue;
+      document.getElementById('web-step3').textContent = config.web_step3 || defaultConfig.web_step3;
+      document.getElementById('web-legacy').innerHTML = `• <span class="font-semibold">Legacy Schema</span> — ${(config.web_legacy || defaultConfig.web_legacy).split('—')[1] || 'matches the current RDF structure in the EUCAIM catalogue'}`;
+      document.getElementById('web-new').innerHTML = `• <span class="font-semibold">New Schema</span> — ${(config.web_new || defaultConfig.web_new).split('—')[1] || 'follows the WP5 vocabulary (not yet used in catalogue)'}`;
+      document.getElementById('web-step4').textContent = config.web_step4 || defaultConfig.web_step4;
+      document.getElementById('cli-title').textContent = config.cli_title || defaultConfig.cli_title;
+      document.getElementById('cli-intro').textContent = config.cli_intro || defaultConfig.cli_intro;
+      document.getElementById('cli-pull-title').textContent = config.cli_pull_title || defaultConfig.cli_pull_title;
+      document.getElementById('cli-pull-command').textContent = config.cli_pull_command || defaultConfig.cli_pull_command;
+      document.getElementById('cli-batch-title').textContent = config.cli_batch_title || defaultConfig.cli_batch_title;
+      document.getElementById('cli-batch-windows').textContent = config.cli_batch_windows || defaultConfig.cli_batch_windows;
+      document.getElementById('cli-batch-linux').textContent = config.cli_batch_linux || defaultConfig.cli_batch_linux;
+      document.getElementById('cli-batch-flags').textContent = config.cli_batch_flags || defaultConfig.cli_batch_flags;
+      document.getElementById('cli-batch-result').textContent = config.cli_batch_result || defaultConfig.cli_batch_result;
+      document.getElementById('cli-single-title').textContent = config.cli_single_title || defaultConfig.cli_single_title;
+      document.getElementById('cli-single-command').textContent = config.cli_single_command || defaultConfig.cli_single_command;
+      document.getElementById('cli-single-flags').textContent = config.cli_single_flags || defaultConfig.cli_single_flags;
+      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
+
+      // Apply colors
+      const background = config.background_color || defaultConfig.background_color;
+      const cardBg = config.card_background || defaultConfig.card_background;
+      const primaryText = config.primary_text_color || defaultConfig.primary_text_color;
+      const secondaryText = config.secondary_text_color || defaultConfig.secondary_text_color;
+      const bodyText = config.body_text_color || defaultConfig.body_text_color;
+
+      document.querySelector('body > div').style.background = `linear-gradient(135deg, #416097 0%, #81cdee 100%)`;
+      document.querySelectorAll('.card').forEach(card => card.style.backgroundColor = cardBg);
+      document.getElementById('subtitle').style.color = '#ffffff';
+      document.querySelectorAll('h2').forEach(h => h.style.color = primaryText);
+      document.querySelectorAll('h3').forEach(h => h.style.color = secondaryText);
+      document.querySelectorAll('p[id*="text"], p[id*="intro"], p[id*="info"], p[id*="result"]').forEach(p => p.style.color = bodyText);
+      document.getElementById('footer-text').style.color = '#ffffff';
+      document.getElementById('modes-text').style.color = '#ffffff';
+      document.querySelectorAll('svg')[0].style.fill = '#f18918';
+      document.querySelectorAll('svg')[1].style.fill = '#416097';
+
+      // Apply fonts
+      document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      document.getElementById('subtitle').style.fontSize = `${baseSize * 1.25}px`;
+      document.querySelectorAll('h2').forEach(h => h.style.fontSize = `${baseSize * 1.875}px`);
+      document.querySelectorAll('h3').forEach(h => h.style.fontSize = `${baseSize * 1.125}px`);
+      document.querySelectorAll('p').forEach(p => p.style.fontSize = `${baseSize}px`);
+      document.querySelectorAll('code').forEach(c => c.style.fontSize = `${baseSize * 0.75}px`);
+      document.querySelectorAll('.copy-btn').forEach(btn => btn.style.fontSize = `${baseSize * 0.875}px`);
+      document.getElementById('footer-text').style.fontSize = `${baseSize * 1.125}px`;
+      document.getElementById('modes-text').style.fontSize = `${baseSize * 1.25}px`;
+    }
+
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => {
+          btn.textContent = originalText;
+        }, 2000);
+      });
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            { 
+              get: () => config.background_color || defaultConfig.background_color, 
+              set: (value) => { 
+                config.background_color = value; 
+                window.elementSdk.setConfig({ background_color: value }); 
+              } 
+            },
+            { 
+              get: () => config.card_background || defaultConfig.card_background, 
+              set: (value) => { 
+                config.card_background = value; 
+                window.elementSdk.setConfig({ card_background: value }); 
+              } 
+            },
+            { 
+              get: () => config.primary_text_color || defaultConfig.primary_text_color, 
+              set: (value) => { 
+                config.primary_text_color = value; 
+                window.elementSdk.setConfig({ primary_text_color: value }); 
+              } 
+            },
+            { 
+              get: () => config.secondary_text_color || defaultConfig.secondary_text_color, 
+              set: (value) => { 
+                config.secondary_text_color = value; 
+                window.elementSdk.setConfig({ secondary_text_color: value }); 
+              } 
+            },
+            { 
+              get: () => config.body_text_color || defaultConfig.body_text_color, 
+              set: (value) => { 
+                config.body_text_color = value; 
+                window.elementSdk.setConfig({ body_text_color: value }); 
+              } 
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["subtitle", config.subtitle || defaultConfig.subtitle],
+          ["about_title", config.about_title || defaultConfig.about_title],
+          ["about_text", config.about_text || defaultConfig.about_text],
+          ["service_title", config.service_title || defaultConfig.service_title],
+          ["service_text", config.service_text || defaultConfig.service_text],
+          ["service_command", config.service_command || defaultConfig.service_command],
+          ["service_info", config.service_info || defaultConfig.service_info],
+          ["service_api", config.service_api || defaultConfig.service_api],
+          ["service_web", config.service_web || defaultConfig.service_web],
+          ["service_note", config.service_note || defaultConfig.service_note],
+          ["modes_text", config.modes_text || defaultConfig.modes_text],
+          ["web_title", config.web_title || defaultConfig.web_title],
+          ["web_step1", config.web_step1 || defaultConfig.web_step1],
+          ["web_url", config.web_url || defaultConfig.web_url],
+          ["web_step2", config.web_step2 || defaultConfig.web_step2],
+          ["web_catalogue", config.web_catalogue || defaultConfig.web_catalogue],
+          ["web_step3", config.web_step3 || defaultConfig.web_step3],
+          ["web_legacy", config.web_legacy || defaultConfig.web_legacy],
+          ["web_new", config.web_new || defaultConfig.web_new],
+          ["web_step4", config.web_step4 || defaultConfig.web_step4],
+          ["cli_title", config.cli_title || defaultConfig.cli_title],
+          ["cli_intro", config.cli_intro || defaultConfig.cli_intro],
+          ["cli_pull_title", config.cli_pull_title || defaultConfig.cli_pull_title],
+          ["cli_pull_command", config.cli_pull_command || defaultConfig.cli_pull_command],
+          ["cli_batch_title", config.cli_batch_title || defaultConfig.cli_batch_title],
+          ["cli_batch_windows", config.cli_batch_windows || defaultConfig.cli_batch_windows],
+          ["cli_batch_linux", config.cli_batch_linux || defaultConfig.cli_batch_linux],
+          ["cli_batch_flags", config.cli_batch_flags || defaultConfig.cli_batch_flags],
+          ["cli_batch_result", config.cli_batch_result || defaultConfig.cli_batch_result],
+          ["cli_single_title", config.cli_single_title || defaultConfig.cli_single_title],
+          ["cli_single_command", config.cli_single_command || defaultConfig.cli_single_command],
+          ["cli_single_flags", config.cli_single_flags || defaultConfig.cli_single_flags],
+          ["footer_text", config.footer_text || defaultConfig.footer_text]
+        ])
+      });
+    }
+  </script>
+</body>
+</html>
